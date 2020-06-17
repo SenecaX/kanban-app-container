@@ -6,7 +6,7 @@ services:
     container_name: angular-docker-container
     build: ./ticket-system
     ports:
-      - "9000:9000"
+      - "9000:80"
 
   express: # name of the second service
     build: auth-app # specify the directory of the Dockerfile

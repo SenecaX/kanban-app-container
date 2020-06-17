@@ -9,4 +9,4 @@ RUN npm install && npm run build
 
 FROM nginx:alpine
 COPY --from=my-app-build /app/dist/ticket-system /usr/share/nginx/html
-EXPOSE 9000
+EXPOSE 80
