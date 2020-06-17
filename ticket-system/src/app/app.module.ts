@@ -15,7 +15,11 @@ import {
 } from './shared/interceptor';
 import { AlertComponent } from './shared/components/alert/alert.component';
 import { JwtModule } from '@auth0/angular-jwt';
-import { CommonModule } from '@angular/common';
+import {
+  CommonModule,
+  HashLocationStrategy,
+  LocationStrategy
+} from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -49,7 +53,8 @@ export function tokenGetter() {
   providers: [
     TicketHttpInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]
 })
