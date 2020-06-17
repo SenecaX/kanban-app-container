@@ -7,6 +7,9 @@ docker-compose build
 # run app
 docker-compose up
 
+# app address
+go to: http://localhost:9000/
+
 # Project screens
 Login Page
 ![alt text](https://github.com/SenecaX/kanban-app-container/blob/master/images/part1.JPG?raw=true)
