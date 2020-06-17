@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => res.send("Hello World!"));
 
 app.listen(port, () =>
-  console.log(`Auth app listening at http://localhost:${port}`)
+  console.log(`Ticket Backend listening at http://localhost:${port}`)
 );
 
 //add cors
