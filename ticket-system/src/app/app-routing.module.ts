@@ -6,7 +6,7 @@ import { RegistrationComponent } from './features/authentication/registration/re
 import { AuthGuard } from './shared/services/auth.guard.service';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
