@@ -1,0 +1,19 @@
+version: "3.0" # specify docker-compose version
+
+# Define the services/ containers to be run
+services:
+  angular-docker:
+    container_name: angular-docker-container
+    build: ./ticket-system
+    ports:
+      - "9000:9000"
+
+  express: # name of the second service
+    build: auth-app # specify the directory of the Dockerfile
+    ports:
+      - "3000:3000" #specify ports mapping
+
+  express-be: # name of the second service
+    build: ticket-backend # specify the directory of the Dockerfile
+    ports:
+      - "3001:3001" #specify ports mapping
