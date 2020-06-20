@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './features/authentication/login/login.component';
-import { DashboardComponent } from './features/kanban/dashboard/dashboard.component';
-import { RegistrationComponent } from './features/authentication/registration/registration.component';
 import { AuthGuard } from './shared/services/auth.guard.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   {
-    path: 'kanban',
+    path: 'board',
     loadChildren: () =>
-      import('./features/kanban/kanban.module').then(
-        importedModule => importedModule.KanbanModule
+      import('./features/board/board.module').then(
+        importedModule => importedModule.BoardModule
       )
   },
   {

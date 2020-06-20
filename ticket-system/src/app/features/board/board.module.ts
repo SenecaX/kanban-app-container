@@ -9,17 +9,21 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from 'src/app/shared/services/auth.guard.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { KanbanRoutingModule } from './kanban-routing.module';
+import { KanbanRoutingModule } from './board-routing.module';
+import { boardReducer } from './state/board.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { BoardEffects } from './state/board.effects';
 
 @NgModule({
   imports: [
     SharedModule,
     FontAwesomeModule,
     DragDropModule,
-    KanbanRoutingModule
-    // StoreModule.forFeature('users', reducer)
+    KanbanRoutingModule,
+    StoreModule.forFeature('board', boardReducer),
+    EffectsModule.forFeature([BoardEffects])
   ],
   exports: [FontAwesomeModule],
   declarations: [DashboardComponent]
 })
-export class KanbanModule {}
+export class BoardModule {}

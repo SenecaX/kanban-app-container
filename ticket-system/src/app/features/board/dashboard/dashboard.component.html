@@ -1,5 +1,5 @@
 <div class="board-bar">
-  <p class="board-name text-center pt-5">Kanban Board</p>
+  <p class="board-name text-center pt-5">Board Board</p>
 </div>
 
 <div class="board-wrapper">
@@ -65,7 +65,7 @@
                 *ngIf="editTaskName && currentEditTaskId === item._id"
                 #editing
                 (change)="changeName = $event.target.value"
-                ([ngModel])="changeName"
+                ([ngModel])="(changeName)"
               ></textarea>
               <span *ngIf="!editTaskName || currentEditTaskId !== item._id">{{
                 item.taskName

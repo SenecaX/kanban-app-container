@@ -16,6 +16,9 @@ import {
   faDumpster
 } from '@fortawesome/free-solid-svg-icons';
 import { Task } from 'src/app/shared/models/task';
+import { Store, select } from '@ngrx/store';
+import * as boardActions from '../state/board.actions';
+import * as fromBoard from '../state/board.reducer';
 
 @Component({
   selector: 'app-dashboard',
@@ -47,7 +50,10 @@ export class DashboardComponent implements OnInit {
   public faCheck = faCheck;
   public faDumpster = faDumpster;
 
-  constructor(private readonly taskService: TaskService) {
+  constructor(
+    private readonly taskService: TaskService,
+    private store: Store<fromBoard.State>
+  ) {
     const helper = new JwtHelperService();
     const getToken = localStorage.getItem('access_token');
     this.decodedToken = helper.decodeToken(getToken);
@@ -73,24 +79,30 @@ export class DashboardComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>, columnIndex) {
     if (event.previousContainer === event.container) {
-      const task: Task = event.item.data;
+      const task: Task = { ...event.item.data };
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
       task.status = columnIndex;
-      this.taskService.updateTask(task).subscribe(el => {});
+      // this.taskService.updateTask(task).subscribe(el => {});
+      // this.store.dispatch(new boardActions.UpdateTask(task));
+      console.log('update drop 1');
     } else {
-      const task: Task = event.item.data;
+      const task1: Task = { ...event.item.data };
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      task.status = columnIndex;
-      this.taskService.updateTask(task).subscribe(el => {});
+      task1.status = columnIndex;
+      console.log('columnIndex', columnIndex);
+      this.store.dispatch(new boardActions.UpdateTask(task1));
+      // this.taskService.updateTask(task).subscribe(el => {});
+      console.log('update drop 2');
+      console.log('columnIndex', columnIndex);
     }
   }
 
@@ -111,44 +123,52 @@ export class DashboardComponent implements OnInit {
       taskName: item,
       userId: this.decodedToken._id
     };
-    this.taskService.createTask(task).subscribe(
-      tasks => {
-        this.addTaskName = false;
-        this.getTask();
-        this.currentAddIndex = -1;
-      },
-      err => (this.errorMsg = 'Task name is required')
-    );
+
+    this.store.dispatch(new boardActions.AddTask(task));
+    this.addTaskName = false;
+    this.currentAddIndex = -1;
+
+    // this.taskService.createTask(task).subscribe(
+    //   tasks => {
+    //     this.addTaskName = false;
+    //     this.getTask();
+    //     this.currentAddIndex = -1;
+    //   },
+    //   err => (this.errorMsg = 'Task name is required')
+    // );
   }
 
   public getTask(): void {
-    this.taskService.getTasks(this.decodedToken._id).subscribe(tasks => {
-      this.tasks = tasks;
-      this.todo = [];
-      this.done = [];
-      this.progress = [];
-      this.tasks.forEach(element => {
-        if (element.status === 0) {
-          this.todo.push(element);
-        } else if (element.status === 1) {
-          this.progress.push(element);
-        } else {
-          this.done.push(element);
-        }
+    this.store.dispatch(new boardActions.LoadTasks());
+    this.store.pipe(select(fromBoard.getTask)).subscribe(tasks => {
+      if (tasks) {
+        this.tasks = tasks;
+        this.todo = [];
+        this.done = [];
+        this.progress = [];
+        this.tasks.forEach(element => {
+          if (element.status === 0) {
+            this.todo.push(element);
+          } else if (element.status === 1) {
+            this.progress.push(element);
+          } else {
+            this.done.push(element);
+          }
 
-        if (this.todo.length === 0) {
-          this.containerEmpty = true;
-        } else if (this.done.length === 0) {
-          this.containerEmpty = true;
-        } else if (this.progress.length === 0) {
-          this.containerEmpty = true;
-        }
-      });
-      this.board = new Board('Test board', [
-        new Column('Todo', this.todo),
-        new Column('In Progress', this.progress),
-        new Column('Done', this.done)
-      ]);
+          if (this.todo.length === 0) {
+            this.containerEmpty = true;
+          } else if (this.done.length === 0) {
+            this.containerEmpty = true;
+          } else if (this.progress.length === 0) {
+            this.containerEmpty = true;
+          }
+        });
+        this.board = new Board('Test board', [
+          new Column('Todo', this.todo),
+          new Column('In Progress', this.progress),
+          new Column('Done', this.done)
+        ]);
+      }
     });
   }
 
@@ -157,28 +177,32 @@ export class DashboardComponent implements OnInit {
     this.editTaskName = false;
   }
 
-  public editTask(task, name?): void {
+  public editTask(task: Task, name?: string): void {
+    const newTask = { ...task };
     this.changeName = task.taskName;
     this.currentEditTaskId = task._id;
     this.saveEdit = true;
     this.editTaskName = true;
-    task.taskName = name;
+    newTask.taskName = name;
 
     if (name) {
-      this.taskService.updateTask(task).subscribe(data => {
-        this.todo = [];
-        this.progress = [];
-        this.done = [];
-        this.editTaskName = false;
-        this.getTask();
-        this.saveEdit = false;
-      });
+      // this.store.dispatch(new boardActions.UpdateTask(newTask));
+      console.log('update edittask');
+      this.todo = [];
+      this.progress = [];
+      this.done = [];
+      this.editTaskName = false;
+      // this.getTask();
+      this.saveEdit = false;
     }
   }
 
   public deleteTask(task): void {
-    this.taskService.deleteTask(task).subscribe(data => {
-      this.getTask();
-    });
+    console.log('del', task._id);
+    this.store.dispatch(new boardActions.DeleteTask(task._id));
+    // this.getTask();
+    // this.taskService.deleteTask(task).subscribe(data => {
+    //   this.getTask();
+    // });
   }
 }

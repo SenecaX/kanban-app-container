@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Task } from '../models/task';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
@@ -19,7 +19,10 @@ export class TaskService {
   }
 
   createTask(task: Task) {
-    return this.http.post('http://localhost:3001/api/task/', task);
+    return this.http.post('http://localhost:3001/api/task/', task).pipe(
+      tap((data: Task) => console.log('data', data)),
+      catchError(this.errorHandler)
+    );
   }
 
   updateStatus(task: Task): Observable<Task> {
@@ -37,21 +40,20 @@ export class TaskService {
       .pipe(catchError(this.errorHandler));
   }
 
-  deleteTask(task: Task): Observable<Task> {
+  deleteTask(taskId: string): Observable<Task> {
     this.httpOptions.headers.set(
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, PUT, DELETE'
     );
     return this.http
       .delete<Task>(
-        'http://localhost:3001/api/task/' + task._id,
+        'http://localhost:3001/api/task/' + taskId,
         this.httpOptions
       )
       .pipe(catchError(this.errorHandler));
   }
 
   updateTask(task: Task): Observable<Task> {
-    console.log('entered');
     this.httpOptions.headers.set(
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, PUT, DELETE'
@@ -62,7 +64,10 @@ export class TaskService {
         task,
         this.httpOptions
       )
-      .pipe(catchError(this.errorHandler));
+      .pipe(
+        tap((data: Task) => console.log('updatedData', data)),
+        catchError(this.errorHandler)
+      );
   }
 
   errorHandler(error) {

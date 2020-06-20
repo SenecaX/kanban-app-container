@@ -3,9 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './features/authentication/login/login.component';
-import { RegistrationComponent } from './features/authentication/registration/registration.component';
-import { DashboardComponent } from './features/kanban/dashboard/dashboard.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
@@ -13,17 +10,18 @@ import {
   JwtInterceptor,
   ErrorInterceptor
 } from './shared/interceptor';
-import { AlertComponent } from './shared/components/alert/alert.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import {
   CommonModule,
   HashLocationStrategy,
   LocationStrategy
 } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StoreModule } from '@ngrx/store';
 import { SharedModule } from './shared/shared.module';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { BoardEffects } from './features/board/state/board.effects';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -44,9 +42,14 @@ export function tokenGetter() {
     }),
     SharedModule,
     FormsModule,
-    ReactiveFormsModule
-
-    // StoreModule.forRoot('reducer')
+    ReactiveFormsModule,
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      name: 'Board',
+      maxAge: 25,
+      logOnly: environment.production
+    }),
+    EffectsModule.forRoot([])
   ],
   providers: [
     TicketHttpInterceptor,

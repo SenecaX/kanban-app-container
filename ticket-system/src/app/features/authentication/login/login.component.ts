@@ -57,8 +57,7 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          console.log('rou', this.router);
-          this.router.navigate(['/kanban/dashboard']);
+          this.router.navigate(['/board/dashboard']);
         },
         error => {
           this.alertService.error(error);

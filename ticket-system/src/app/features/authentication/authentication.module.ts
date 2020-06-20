@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
+import { userReducer } from './state/user.reducer';
 
 @NgModule({
   imports: [
@@ -19,8 +20,8 @@ import { AuthenticationRoutingModule } from './authentication-routing.module';
     DragDropModule,
     FormsModule,
     ReactiveFormsModule,
-    AuthenticationRoutingModule
-    // StoreModule.forFeature('users', reducer)
+    AuthenticationRoutingModule,
+    StoreModule.forFeature('user', userReducer)
   ],
   exports: [FontAwesomeModule],
   declarations: [LoginComponent, RegistrationComponent]
