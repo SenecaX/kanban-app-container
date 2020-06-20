@@ -97,10 +97,8 @@ export function boardReducer(
 
     case BoardActionTypes.UpdateTaskSuccess:
       const updatedTask = state.tasks.map(item => {
-        console.log('reducer', action.payload, item._id);
         return action.payload._id === item._id ? action.payload : item;
       });
-      console.log('reducer updatedTask ', updatedTask);
       return {
         ...state,
         tasks: updatedTask,
@@ -129,7 +127,6 @@ export function boardReducer(
       };
 
     case BoardActionTypes.DeleteTaskSuccess:
-      console.log('suc', action.payload);
       return {
         ...state,
         tasks: state.tasks.filter(task => task._id !== action.payload),

@@ -20,13 +20,12 @@ export class TaskService {
 
   createTask(task: Task) {
     return this.http.post('http://localhost:3001/api/task/', task).pipe(
-      tap((data: Task) => console.log('data', data)),
+      tap((data: Task) => data),
       catchError(this.errorHandler)
     );
   }
 
   updateStatus(task: Task): Observable<Task> {
-    console.log('entered');
     this.httpOptions.headers.set(
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, PUT, DELETE'
@@ -65,7 +64,7 @@ export class TaskService {
         this.httpOptions
       )
       .pipe(
-        tap((data: Task) => console.log('updatedData', data)),
+        tap((data: Task) => data),
         catchError(this.errorHandler)
       );
   }

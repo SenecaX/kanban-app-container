@@ -31,7 +31,6 @@ export class BoardEffects {
   updateTask$: Observable<Action> = this.actions$.pipe(
     ofType(boardActions.BoardActionTypes.UpdateTask),
     map((action: boardActions.UpdateTask) => {
-      console.log('effects', action.payload);
       return action.payload;
     }),
     mergeMap((task: Task) =>

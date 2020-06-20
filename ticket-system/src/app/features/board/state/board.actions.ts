@@ -128,17 +128,13 @@ export class AddTaskFail implements Action {
 export class UpdateTask implements Action {
   readonly type = BoardActionTypes.UpdateTask;
 
-  constructor(public payload: Task) {
-    console.log('action', payload);
-  }
+  constructor(public payload: Task) {}
 }
 
 export class UpdateTaskSuccess implements Action {
   readonly type = BoardActionTypes.UpdateTaskSuccess;
 
-  constructor(public payload: Task) {
-    console.log('action success', payload);
-  }
+  constructor(public payload: Task) {}
 }
 
 export class UpdateTaskFail implements Action {
@@ -150,9 +146,7 @@ export class UpdateTaskFail implements Action {
 export class DeleteTask implements Action {
   readonly type = BoardActionTypes.DeleteTask;
 
-  constructor(public payload: string) {
-    console.log('del action', payload);
-  }
+  constructor(public payload: string) {}
 }
 
 export class DeleteTaskSuccess implements Action {

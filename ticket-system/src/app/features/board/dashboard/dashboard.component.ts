@@ -88,7 +88,6 @@ export class DashboardComponent implements OnInit {
       task.status = columnIndex;
       // this.taskService.updateTask(task).subscribe(el => {});
       // this.store.dispatch(new boardActions.UpdateTask(task));
-      console.log('update drop 1');
     } else {
       const task1: Task = { ...event.item.data };
       transferArrayItem(
@@ -98,11 +97,8 @@ export class DashboardComponent implements OnInit {
         event.currentIndex
       );
       task1.status = columnIndex;
-      console.log('columnIndex', columnIndex);
       this.store.dispatch(new boardActions.UpdateTask(task1));
       // this.taskService.updateTask(task).subscribe(el => {});
-      console.log('update drop 2');
-      console.log('columnIndex', columnIndex);
     }
   }
 
@@ -113,7 +109,6 @@ export class DashboardComponent implements OnInit {
 
   public cancelAdd(): void {
     this.addTaskName = false;
-    console.log('entere');
     this.getTask();
   }
 
@@ -187,7 +182,6 @@ export class DashboardComponent implements OnInit {
 
     if (name) {
       // this.store.dispatch(new boardActions.UpdateTask(newTask));
-      console.log('update edittask');
       this.todo = [];
       this.progress = [];
       this.done = [];
@@ -198,7 +192,6 @@ export class DashboardComponent implements OnInit {
   }
 
   public deleteTask(task): void {
-    console.log('del', task._id);
     this.store.dispatch(new boardActions.DeleteTask(task._id));
     // this.getTask();
     // this.taskService.deleteTask(task).subscribe(data => {
