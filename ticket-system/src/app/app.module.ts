@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './features/authentication/login/login.component';
 import { RegistrationComponent } from './features/authentication/registration/registration.component';
 import { DashboardComponent } from './features/kanban/dashboard/dashboard.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
   TicketHttpInterceptor,
@@ -22,33 +22,31 @@ import {
 } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { StoreModule } from '@ngrx/store';
+import { SharedModule } from './shared/shared.module';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    RegistrationComponent,
-    DashboardComponent,
-    AlertComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
-    DragDropModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
         whitelistedDomains: ['http://localhost:3000/', 'http://localhost:3001/']
       }
     }),
-    FontAwesomeModule
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule
+
+    // StoreModule.forRoot('reducer')
   ],
   providers: [
     TicketHttpInterceptor,

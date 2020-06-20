@@ -6,15 +6,21 @@ import { RegistrationComponent } from './features/authentication/registration/re
 import { AuthGuard } from './shared/services/auth.guard.service';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: '', component: LoginComponent },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard]
+    path: 'kanban',
+    loadChildren: () =>
+      import('./features/kanban/kanban.module').then(
+        importedModule => importedModule.KanbanModule
+      )
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegistrationComponent },
-
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./features/authentication/authentication.module').then(
+        importedModule => importedModule.AuthenticationModule
+      )
+  },
   { path: '*', redirectTo: '' }
 ];
 
