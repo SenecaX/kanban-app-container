@@ -47,6 +47,8 @@ export class LoadColumnsFail implements Action {
 
 export class AddColumn implements Action {
   readonly type = BoardActionTypes.AddColumn;
+
+  constructor(public payload: Column) {}
 }
 
 export class AddColumnSuccess implements Action {
@@ -165,6 +167,9 @@ export type BoardActions =
   | LoadColumns
   | LoadColumnsSuccess
   | LoadColumnsFail
+  | AddColumn
+  | AddColumnSuccess
+  | AddColumnFail
   | DeleteColumn
   | DeleteColumnSuccess
   | DeleteColumnFail

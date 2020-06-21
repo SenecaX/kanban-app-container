@@ -75,6 +75,18 @@ export class BoardEffects {
   );
 
   @Effect()
+  addColumn$: Observable<Action> = this.actions$.pipe(
+    ofType(boardActions.BoardActionTypes.AddColumn),
+    map((action: boardActions.AddColumn) => action.payload),
+    mergeMap((column: Column) =>
+      this.columnService.createColumn(column).pipe(
+        map(newColumn => new boardActions.AddColumnSuccess(newColumn)),
+        catchError(err => of(new boardActions.AddColumnFail(err)))
+      )
+    )
+  );
+
+  @Effect()
   loadColumns$ = this.actions$.pipe(
     ofType(boardActions.BoardActionTypes.LoadColumns),
     mergeMap((action: boardActions.LoadColumns) =>

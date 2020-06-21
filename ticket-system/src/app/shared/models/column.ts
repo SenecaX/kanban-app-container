@@ -4,5 +4,5 @@ export class Column {
   _id?: string;
   columnName: string;
   userId: string;
-  tasks: Task[];
+  tasks?: Task[];
 }

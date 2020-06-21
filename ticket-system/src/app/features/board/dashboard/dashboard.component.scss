@@ -60,15 +60,29 @@
   flex-grow: 1;
 }
 
+.size {
+  width: 20em;
+}
+
+.spacer {
+  padding-top: 0.5em;
+}
+
+.space-top {
+  padding-top: 1.5em;
+}
+
 .task {
   display: flex;
+  flex-direction: column;
   padding: 15px 12px;
   background: white;
   border-bottom: solid 1px #ddd;
   border-radius: 4px;
   min-height: 10vh;
   width: 18vw;
-  margin-left: 0.7em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
   cursor: pointer;
 
   margin-bottom: 15px;

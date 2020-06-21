@@ -69,6 +69,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getColumns();
+
+    console.log('this', this);
   }
 
   drop(event: CdkDragDrop<string[]>, columnIndex, nextColumn) {
@@ -103,7 +105,17 @@ export class DashboardComponent implements OnInit {
     this.getColumns();
   }
 
+  public addNewColumn(columnName) {
+    const column: Column = {
+      columnName: columnName.value,
+      userId: this.decodedToken._id
+    };
+
+    this.store.dispatch(new boardActions.AddColumn(column));
+  }
+
   public saveTask(item, columnId): void {
+    console.log('col', columnId);
     const task: Task = {
       columnId,
       taskName: item,

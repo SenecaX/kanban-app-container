@@ -1,5 +1,11 @@
 <div class="board-bar">
-  <p class="board-name text-center pt-5">Board Board</p>
+  <p class="board-name">Board</p>
+  <div *ngIf="board.columns.length < 4">
+    <mat-form-field class="example-full-width">
+      <input matInput value="New column" #columnValue />
+    </mat-form-field>
+    <button mat-button (click)="addNewColumn(columnValue)">Add column</button>
+  </div>
 </div>
 
 <div class="board-wrapper" *ngIf="display">
@@ -8,8 +14,8 @@
       class="board-column"
       *ngFor="let column of board?.columns; let i = index"
     >
-      <div class="mb-3">
-        <p class="column-title mt-3">
+      <div class="">
+        <p class="column-title">
           {{ column.columnName
           }}<fa-icon
             [icon]="faPlus"
@@ -20,23 +26,34 @@
       </div>
 
       <!-- add task name -->
-      <div *ngIf="addTaskName && currentAddIndex === i" class="tasks-container">
-        <div class="task" cdkDrag [cdkDragData]="draggedTask">
-          <textarea
-            name="task"
-            id="task"
-            cols="30"
-            rows="2"
-            value="task"
-            #newTask
-          ></textarea>
-          <span
-            ><fa-icon
-              [icon]="faCheck"
-              (click)="saveTask(newTask.value, column._id)"
-            ></fa-icon>
-            <fa-icon [icon]="faTimes" (click)="cancelAdd()"></fa-icon>
-          </span>
+      <div
+        *ngIf="addTaskName && currentAddIndex === i"
+        class="task-container"
+        style="display: fk"
+      >
+        <div>
+          <div class="task" cdkDrag [cdkDragData]="draggedTask">
+            <div>
+              <textarea
+                name="task"
+                id="task"
+                class="size"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="5"
+                value="task"
+                #newTask
+              ></textarea>
+            </div>
+            <div class="spacer">
+              <fa-icon
+                [icon]="faCheck"
+                (click)="saveTask(newTask.value, column._id)"
+              ></fa-icon>
+              <fa-icon [icon]="faTimes" (click)="cancelAdd()"></fa-icon>
+            </div>
+          </div>
         </div>
         <div class="error" *ngIf="errorMsg !== ''">{{ errorMsg }}</div>
       </div>
@@ -55,7 +72,7 @@
           [cdkDragData]="item"
         >
           <!--  w-100 d-flex justify-content-between -->
-          <div class="w-100 d-flex justify-content-between">
+          <div class="">
             <div>
               <textarea
                 name="task"
@@ -72,22 +89,22 @@
               }}</span>
             </div>
 
-            <div>
+            <div class="space-top">
               <span
                 ><fa-icon
-                  class="pr-2"
+                  class=""
                   [icon]="faEdit"
                   (click)="editTask(item)"
                   *ngIf="!editTaskName"
                 ></fa-icon>
                 <fa-icon
-                  class="pl-2"
+                  class=""
                   [icon]="faCheck"
                   (click)="editTask(item, changeName)"
                   *ngIf="editTaskName && currentEditTaskId === item._id"
                 ></fa-icon>
                 <fa-icon
-                  class="pl-2"
+                  class=""
                   [icon]="faTimes"
                   (click)="cancelTask()"
                   *ngIf="editTaskName && currentEditTaskId === item._id"

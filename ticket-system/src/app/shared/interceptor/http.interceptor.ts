@@ -56,9 +56,7 @@ export class TicketHttpInterceptor implements HttpInterceptor {
       return ok({
         id: user.id,
         name: user.name,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        token: 'fake-jwt-token'
+        token: 'token'
       });
     }
 

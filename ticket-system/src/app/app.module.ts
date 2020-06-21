@@ -25,6 +25,7 @@ import { BoardEffects } from './features/board/state/board.effects';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material/material.module';
+import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -59,9 +60,13 @@ export function tokenGetter() {
   exports: [MaterialModule],
   providers: [
     TicketHttpInterceptor,
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: LocationStrategy, useClass: HashLocationStrategy }
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
