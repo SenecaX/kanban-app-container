@@ -1,12 +1,10 @@
-import { Component, OnInit, AfterViewInit, DoCheck } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
-import { TaskService } from 'src/app/shared/services/task.service.api';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Board } from 'src/app/shared/models/board';
 import { Column } from 'src/app/shared/models/column';
 import {
   faTimes,
@@ -19,7 +17,6 @@ import { Task } from 'src/app/shared/models/task';
 import { Store, select } from '@ngrx/store';
 import * as boardActions from '../state/board.actions';
 import * as fromBoard from '../state/board.reducer';
-import { ColumnService } from 'src/app/shared/services/column.api.service';
 import lodash from 'lodash';
 
 @Component({
@@ -44,6 +41,7 @@ export class DashboardComponent implements OnInit {
   public errorMsg = '';
   public display: boolean;
   public clonedColumn: Column[];
+  public allowAddColumn: boolean;
 
   // icons
   public faTimes = faTimes;
@@ -69,8 +67,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getColumns();
-
-    console.log('this', this);
   }
 
   drop(event: CdkDragDrop<string[]>, columnIndex, nextColumn) {
@@ -115,7 +111,6 @@ export class DashboardComponent implements OnInit {
   }
 
   public saveTask(item, columnId): void {
-    console.log('col', columnId);
     const task: Task = {
       columnId,
       taskName: item,

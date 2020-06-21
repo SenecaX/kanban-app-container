@@ -36,12 +36,10 @@ export class TicketHttpInterceptor implements HttpInterceptor {
 
     function handleRoute() {
       switch (true) {
-        case url.endsWith('/users/authenticate') && method === 'POST':
+        case url.endsWith('/auth/login') && method === 'POST':
           return authenticate();
-        case url.endsWith('/users') && method === 'GET':
+        case url.endsWith('/login') && method === 'GET':
           return getUsers();
-        case url.match(/\/users\/\d+$/) && method === 'DELETE':
-          return deleteUser();
         default:
           return next.handle(request);
       }
