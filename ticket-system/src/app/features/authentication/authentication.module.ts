@@ -12,6 +12,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { userReducer } from './state/user.reducer';
+import { MaterialModule } from 'src/app/shared/material/material.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { userReducer } from './state/user.reducer';
     FormsModule,
     ReactiveFormsModule,
     AuthenticationRoutingModule,
-    StoreModule.forFeature('user', userReducer)
+    StoreModule.forFeature('user', userReducer),
+    MaterialModule
   ],
   exports: [FontAwesomeModule],
   declarations: [LoginComponent, RegistrationComponent]

@@ -23,6 +23,9 @@ import { environment } from 'src/environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { BoardEffects } from './features/board/state/board.effects';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './shared/material/material.module';
+
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
@@ -49,8 +52,11 @@ export function tokenGetter() {
       maxAge: 25,
       logOnly: environment.production
     }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
+    BrowserAnimationsModule,
+    MaterialModule
   ],
+  exports: [MaterialModule],
   providers: [
     TicketHttpInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

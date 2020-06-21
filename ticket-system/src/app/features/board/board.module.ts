@@ -13,6 +13,7 @@ import { KanbanRoutingModule } from './board-routing.module';
 import { boardReducer } from './state/board.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { BoardEffects } from './state/board.effects';
+import { MaterialModule } from 'src/app/shared/material/material.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { BoardEffects } from './state/board.effects';
     DragDropModule,
     KanbanRoutingModule,
     StoreModule.forFeature('board', boardReducer),
-    EffectsModule.forFeature([BoardEffects])
+    EffectsModule.forFeature([BoardEffects]),
+    MaterialModule
   ],
   exports: [FontAwesomeModule],
   declarations: [DashboardComponent]

@@ -1,36 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthenticationService } from './shared/services/authentication.api.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { AuthenticationService } from '../../services/authentication.api.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
-export class AppComponent implements OnInit {
+export class HeaderComponent implements OnInit {
   public decodedToken: any;
   currentUser: any;
-  displayItem = false;
+  displayItem: boolean = true;
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
-    this.authenticationService.currentUser.subscribe(
-      x => (this.currentUser = x)
-    );
-
     const helper = new JwtHelperService();
     const getToken = localStorage.getItem('access_token');
     this.decodedToken = helper.decodeToken(getToken);
   }
 
-  ngOnInit(): void {
-    if (this.decodedToken !== null) {
-      this.displayItem = true;
-    }
-  }
+  ngOnInit(): void {}
 
   logout() {
     this.authenticationService.logout();

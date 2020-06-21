@@ -1,4 +1,4 @@
-<h2 class="mt-5">Login</h2>
+<!-- <h2 class="mt-5">Login</h2>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="name">Username</label>
@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="form-group">
-    <button [disabled]="loading" class="btn btn-primary">
+    <button [disabled]="loading" mat-button color="primary">
       <span
         *ngIf="loading"
         class="spinner-border spinner-border-sm mr-1"
@@ -34,4 +34,47 @@
     </button>
     <a routerLink="/register" class="btn btn-link">Register</a>
   </div>
-</form>
+</form> -->
+
+<mat-toolbar>
+  <span>LOGIN</span>
+</mat-toolbar>
+<mat-card class="my-card">
+  <mat-card-content>
+    <form class="my-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field class="full-width">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          placeholder="Name"
+          formControlName="name"
+          name="name"
+          [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+        />
+        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+        </div>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          placeholder="Password"
+          type="password"
+          formControlName="password"
+          name="password"
+          [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+        />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+      </mat-form-field>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary">LOGIN</button>
+        <a routerLink="/auth/register">Register</a>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>
