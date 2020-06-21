@@ -8,10 +8,14 @@ const taskListByUserId = (req, res) => {
 };
 
 const taskUpdateOne = (req, res) => {
-  Task.findByIdAndUpdate(req.params.userId, {
-    status: req.body.status,
-    taskName: req.body.taskName
-  }).exec((err, task) => {
+  Task.findByIdAndUpdate(
+    req.params.userId,
+    {
+      columnId: req.body.columnId,
+      taskName: req.body.taskName
+    },
+    { new: true }
+  ).exec((err, task) => {
     res.status(200).json(task);
   });
 };
@@ -27,7 +31,7 @@ const taskCreate = (req, res) => {
 
   task.taskName = req.body.taskName;
   task.userId = req.body.userId;
-  task.status = req.body.status;
+  task.columnId = req.body.columnId;
 
   task.save(err => {
     if (err) {

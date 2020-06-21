@@ -2,15 +2,15 @@
   <p class="board-name text-center pt-5">Board Board</p>
 </div>
 
-<div class="board-wrapper">
+<div class="board-wrapper" *ngIf="display">
   <div class="board-columns" cdkDropListGroup>
     <div
       class="board-column"
-      *ngFor="let column of board.columns; let i = index"
+      *ngFor="let column of board?.columns; let i = index"
     >
       <div class="mb-3">
         <p class="column-title mt-3">
-          {{ column.name
+          {{ column.columnName
           }}<fa-icon
             [icon]="faPlus"
             (click)="addTask(i)"
@@ -33,7 +33,7 @@
           <span
             ><fa-icon
               [icon]="faCheck"
-              (click)="saveTask(newTask.value, i)"
+              (click)="saveTask(newTask.value, column._id)"
             ></fa-icon>
             <fa-icon [icon]="faTimes" (click)="cancelAdd()"></fa-icon>
           </span>
@@ -45,9 +45,9 @@
         class="tasks-container"
         cdkDropList
         [cdkDropListData]="column.tasks"
-        (cdkDropListDropped)="drop($event, i)"
+        (cdkDropListDropped)="drop($event, i, column)"
       >
-        <p style="padding-top: 100px;" *ngIf="column.tasks.length === 0">.</p>
+        <p style="padding-top: 100px;" *ngIf="column.tasks?.length === 0">.</p>
         <div
           class="task"
           *ngFor="let item of column.tasks"

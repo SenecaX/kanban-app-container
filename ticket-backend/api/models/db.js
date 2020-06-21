@@ -46,3 +46,4 @@ process.on("SIGINT", () => {
 connect();
 
 require("./task");
+require("./column");

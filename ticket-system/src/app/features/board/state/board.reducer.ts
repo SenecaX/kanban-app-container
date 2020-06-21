@@ -140,6 +140,20 @@ export function boardReducer(
         error: action.payload
       };
 
+    case BoardActionTypes.LoadColumnsSuccess:
+      return {
+        ...state,
+        column: action.payload,
+        error: ''
+      };
+
+    case BoardActionTypes.LoadTasksFail:
+      return {
+        ...state,
+        column: [],
+        error: action.payload
+      };
+
     default:
       return state;
   }

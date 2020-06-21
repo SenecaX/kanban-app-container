@@ -10,8 +10,8 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  status: {
-    type: Number,
+  columnId: {
+    type: String,
     required: true
   }
 });

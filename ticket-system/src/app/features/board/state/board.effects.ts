@@ -7,11 +7,17 @@ import { Task } from 'src/app/shared/models/task';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
+import { Column } from 'src/app/shared/models/column';
+import { ColumnService } from 'src/app/shared/services/column.api.service';
 
 @Injectable()
 export class BoardEffects {
   public decodedToken: any;
-  constructor(private actions$: Actions, private taskService: TaskService) {
+  constructor(
+    private actions$: Actions,
+    private taskService: TaskService,
+    private columnService: ColumnService
+  ) {
     const helper = new JwtHelperService();
     const getToken = localStorage.getItem('access_token');
     this.decodedToken = helper.decodeToken(getToken);
@@ -35,7 +41,10 @@ export class BoardEffects {
     }),
     mergeMap((task: Task) =>
       this.taskService.updateTask(task).pipe(
-        map(updatedTask => new boardActions.UpdateTaskSuccess(updatedTask)),
+        map(updatedTask => {
+          console.log('up', updatedTask);
+          return new boardActions.UpdateTaskSuccess(updatedTask);
+        }),
         catchError(err => of(new boardActions.UpdateTaskFail(err)))
       )
     )
@@ -62,6 +71,20 @@ export class BoardEffects {
         map(newTask => new boardActions.AddTaskSuccess(newTask)),
         catchError(err => of(new boardActions.AddTaskFail(err)))
       )
+    )
+  );
+
+  @Effect()
+  loadColumns$ = this.actions$.pipe(
+    ofType(boardActions.BoardActionTypes.LoadColumns),
+    mergeMap((action: boardActions.LoadColumns) =>
+      this.columnService
+        .getColumns(this.decodedToken._id)
+        .pipe(
+          map(
+            (columns: Column[]) => new boardActions.LoadColumnsSuccess(columns)
+          )
+        )
     )
   );
 }

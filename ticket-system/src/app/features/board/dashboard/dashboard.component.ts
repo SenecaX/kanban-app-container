@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, DoCheck } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -19,6 +19,8 @@ import { Task } from 'src/app/shared/models/task';
 import { Store, select } from '@ngrx/store';
 import * as boardActions from '../state/board.actions';
 import * as fromBoard from '../state/board.reducer';
+import { ColumnService } from 'src/app/shared/services/column.api.service';
+import lodash from 'lodash';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,11 +29,9 @@ import * as fromBoard from '../state/board.reducer';
 })
 export class DashboardComponent implements OnInit {
   public decodedToken: any;
-  public todo: string[];
-  public done: string[];
-  public progress: string[];
   public board: any;
   public tasks: Task[] | any;
+  public columns: Task[] | any;
   public draggedTask: any;
   public editTaskName: boolean;
   public addTaskName: boolean;
@@ -42,6 +42,8 @@ export class DashboardComponent implements OnInit {
   public currentEditTaskId = null;
   public changeName = '';
   public errorMsg = '';
+  public display: boolean;
+  public clonedColumn: Column[];
 
   // icons
   public faTimes = faTimes;
@@ -50,34 +52,26 @@ export class DashboardComponent implements OnInit {
   public faCheck = faCheck;
   public faDumpster = faDumpster;
 
-  constructor(
-    private readonly taskService: TaskService,
-    private store: Store<fromBoard.State>
-  ) {
+  constructor(private store: Store<fromBoard.State>) {
     const helper = new JwtHelperService();
     const getToken = localStorage.getItem('access_token');
     this.decodedToken = helper.decodeToken(getToken);
 
-    // columns
-    this.todo = [];
-    this.done = [];
-    this.progress = [];
+    this.display = false;
 
     this.editTaskName = false;
     this.addTaskName = false;
-
-    this.board = new Board('Test board', [
-      new Column('Todo', this.todo),
-      new Column('In Progress', this.progress),
-      new Column('Done', this.done)
-    ]);
+    this.columns = [];
+    this.board = {
+      columns: []
+    };
   }
 
   ngOnInit() {
-    this.getTask();
+    this.getColumns();
   }
 
-  drop(event: CdkDragDrop<string[]>, columnIndex) {
+  drop(event: CdkDragDrop<string[]>, columnIndex, nextColumn) {
     if (event.previousContainer === event.container) {
       const task: Task = { ...event.item.data };
       moveItemInArray(
@@ -85,9 +79,7 @@ export class DashboardComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      task.status = columnIndex;
-      // this.taskService.updateTask(task).subscribe(el => {});
-      // this.store.dispatch(new boardActions.UpdateTask(task));
+      task.columnId = columnIndex;
     } else {
       const task1: Task = { ...event.item.data };
       transferArrayItem(
@@ -96,9 +88,8 @@ export class DashboardComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      task1.status = columnIndex;
+      task1.columnId = nextColumn._id;
       this.store.dispatch(new boardActions.UpdateTask(task1));
-      // this.taskService.updateTask(task).subscribe(el => {});
     }
   }
 
@@ -109,12 +100,12 @@ export class DashboardComponent implements OnInit {
 
   public cancelAdd(): void {
     this.addTaskName = false;
-    this.getTask();
+    this.getColumns();
   }
 
-  public saveTask(item, status): void {
+  public saveTask(item, columnId): void {
     const task: Task = {
-      status,
+      columnId,
       taskName: item,
       userId: this.decodedToken._id
     };
@@ -122,53 +113,42 @@ export class DashboardComponent implements OnInit {
     this.store.dispatch(new boardActions.AddTask(task));
     this.addTaskName = false;
     this.currentAddIndex = -1;
-
-    // this.taskService.createTask(task).subscribe(
-    //   tasks => {
-    //     this.addTaskName = false;
-    //     this.getTask();
-    //     this.currentAddIndex = -1;
-    //   },
-    //   err => (this.errorMsg = 'Task name is required')
-    // );
   }
 
-  public getTask(): void {
+  public getTask(clonedColumn): void {
     this.store.dispatch(new boardActions.LoadTasks());
-    this.store.pipe(select(fromBoard.getTask)).subscribe(tasks => {
-      if (tasks) {
-        this.tasks = tasks;
-        this.todo = [];
-        this.done = [];
-        this.progress = [];
-        this.tasks.forEach(element => {
-          if (element.status === 0) {
-            this.todo.push(element);
-          } else if (element.status === 1) {
-            this.progress.push(element);
-          } else {
-            this.done.push(element);
-          }
 
-          if (this.todo.length === 0) {
-            this.containerEmpty = true;
-          } else if (this.done.length === 0) {
-            this.containerEmpty = true;
-          } else if (this.progress.length === 0) {
-            this.containerEmpty = true;
+    if (clonedColumn !== null) {
+      this.board.columns = [];
+      clonedColumn.filter((column, index) => {
+        this.board.columns.push(column);
+        this.store.pipe(select(fromBoard.getTask)).subscribe(tasks => {
+          if (tasks) {
+            this.board.columns[index].tasks = [];
+            tasks.filter(task => {
+              if (task.columnId === this.board.columns[index]._id) {
+                this.board.columns[index].tasks.push(task);
+              }
+            });
           }
         });
-        this.board = new Board('Test board', [
-          new Column('Todo', this.todo),
-          new Column('In Progress', this.progress),
-          new Column('Done', this.done)
-        ]);
+      });
+    }
+    this.display = true;
+  }
+
+  public getColumns() {
+    this.store.dispatch(new boardActions.LoadColumns());
+    this.store.pipe(select(fromBoard.getColumn)).subscribe(columns => {
+      this.clonedColumn = lodash.cloneDeep(columns);
+      if (this.clonedColumn) {
+        this.getTask(this.clonedColumn);
       }
     });
   }
 
   public cancelTask(): void {
-    this.getTask();
+    this.getColumns();
     this.editTaskName = false;
   }
 
@@ -181,21 +161,13 @@ export class DashboardComponent implements OnInit {
     newTask.taskName = name;
 
     if (name) {
-      // this.store.dispatch(new boardActions.UpdateTask(newTask));
-      this.todo = [];
-      this.progress = [];
-      this.done = [];
+      this.store.dispatch(new boardActions.UpdateTask(newTask));
       this.editTaskName = false;
-      // this.getTask();
       this.saveEdit = false;
     }
   }
 
   public deleteTask(task): void {
     this.store.dispatch(new boardActions.DeleteTask(task._id));
-    // this.getTask();
-    // this.taskService.deleteTask(task).subscribe(data => {
-    //   this.getTask();
-    // });
   }
 }
