@@ -8,7 +8,7 @@ const columnListByUserId = (req, res) => {
 };
 
 const columnDeleteOne = (req, res) => {
-  Column.findByIdAndDelete(req.params.userId).exec((err, column) => {
+  Column.findByIdAndDelete(req.params.columnId).exec((err, column) => {
     res.status(200).json(column);
   });
 };

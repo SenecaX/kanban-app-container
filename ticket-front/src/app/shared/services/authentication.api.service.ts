@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { User } from '../models/User';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -11,14 +12,16 @@ export class AuthenticationService {
 
   constructor(private readonly http: HttpClient) {
     const retrievedToken = JSON.parse(localStorage.getItem('access_token'));
-
     this.currentUserSubject = new BehaviorSubject<any>(retrievedToken);
-
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
   public get currentUserValue() {
     return this.currentUserSubject.value;
+  }
+
+  register(user: User) {
+    return this.http.post(`http://localhost:3000/api/register`, user);
   }
 
   public login(name, password) {

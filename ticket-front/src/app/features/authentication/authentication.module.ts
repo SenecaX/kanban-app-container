@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
 import { SharedModule } from '../../shared/shared.module';
-
-/* NgRx */
 import { StoreModule } from '@ngrx/store';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -13,6 +9,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { userReducer } from './state/user.reducer';
 import { MaterialModule } from 'src/app/shared/material/material.module';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './state/user.effects';
 
 @NgModule({
   imports: [
@@ -23,6 +21,7 @@ import { MaterialModule } from 'src/app/shared/material/material.module';
     ReactiveFormsModule,
     AuthenticationRoutingModule,
     StoreModule.forFeature('user', userReducer),
+    EffectsModule.forFeature([UserEffects]),
     MaterialModule
   ],
   exports: [FontAwesomeModule],

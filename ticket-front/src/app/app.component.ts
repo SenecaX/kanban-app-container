@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './shared/services/authentication.api.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import * as fromUser from './features/authentication/state/user.reducer';
+import { Store } from '@ngrx/store';
+import { Logout } from './state/clearstate.action';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +13,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AppComponent implements OnInit {
   public decodedToken: any;
-  currentUser: any;
-  displayItem = false;
+  public currentUser: any;
+  public displayItem = false;
 
   constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
+    private readonly router: Router,
+    private readonly authenticationService: AuthenticationService,
+    private readonly store: Store<fromUser.State>
   ) {
     this.authenticationService.currentUser.subscribe(
       x => (this.currentUser = x)
@@ -33,6 +37,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
+    this.store.dispatch(new Logout());
     this.authenticationService.logout();
     this.router.navigate(['/auth/login']);
     this.displayItem = false;

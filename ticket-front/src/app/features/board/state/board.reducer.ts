@@ -167,6 +167,19 @@ export function boardReducer(
         error: action.payload
       };
 
+    case BoardActionTypes.DeleteColumnSuccess:
+      return {
+        ...state,
+        column: state.column.filter(column => column._id !== action.payload),
+        error: ''
+      };
+
+    case BoardActionTypes.DeleteColumnFail:
+      return {
+        ...state,
+        error: action.payload
+      };
+
     default:
       return state;
   }

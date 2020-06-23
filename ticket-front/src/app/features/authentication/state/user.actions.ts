@@ -9,6 +9,8 @@ export enum UserActionTypes {
 
 export class LoadUser implements Action {
   readonly type = UserActionTypes.LoadUser;
+
+  constructor(public payload: User) {}
 }
 
 export class LoadUserSuccess implements Action {

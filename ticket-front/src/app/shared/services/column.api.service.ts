@@ -30,6 +30,7 @@ export class ColumnService {
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, PUT, DELETE'
     );
+
     return this.http
       .delete<Column>(
         'http://localhost:3001/api/column/' + columnId,

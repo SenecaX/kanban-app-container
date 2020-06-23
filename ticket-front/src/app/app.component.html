@@ -1,34 +1,12 @@
-<!-- nav -->
-<!-- <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-  <div class="navbar-nav w-100 d-flex justify-content-between">
-    <a class="nav-item nav-link" routerLink="/dashboard">Dashboard</a>
-    <a class="nav-item nav-link cursor-type" (click)="logout()">Logout</a>
-  </div>
-</nav> -->
-
-<!-- main content container -->
-<!-- <div>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-8 offset-sm-2">
-        <app-alert></app-alert>
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span><a href="/">Kanban App</a></span>
+    <span><a class="logo-style" href="/">Kanban App</a></span>
     <span class="spacer"></span>
-    <a mat-button routerLink="/auth/dashboard">Dashboard</a>
-    <a mat-button (click)="logout()">Logout</a>
+    <a mat-button (click)="logout()" *ngIf="displayItem">Logout</a>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <div class="main">
-  <app-alert></app-alert>
   <div>
     <router-outlet></router-outlet>
   </div>

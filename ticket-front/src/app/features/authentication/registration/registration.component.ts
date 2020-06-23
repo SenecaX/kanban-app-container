@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/shared/services/authentication.api.service';
-import { UserService } from 'src/app/shared/services/user.api.service';
 import { first } from 'rxjs/operators';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
@@ -20,7 +19,6 @@ export class RegistrationComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly authenticationService: AuthenticationService,
-    private readonly userService: UserService,
     private readonly alertService: AlertService
   ) {
     this.loading = false;
@@ -52,7 +50,7 @@ export class RegistrationComponent implements OnInit {
     }
 
     this.loading = true;
-    this.userService
+    this.authenticationService
       .register(this.registerForm.value)
       .pipe(first())
       .subscribe(

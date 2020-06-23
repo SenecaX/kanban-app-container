@@ -22,6 +22,12 @@
             (click)="addTask(i)"
             class="add-icon cursor-style"
           ></fa-icon>
+          <fa-icon
+            class="spacer"
+            [icon]="faTimes"
+            (click)="deleteColumn(column._id)"
+            *ngIf="column.tasks.length === 0"
+          ></fa-icon>
         </p>
       </div>
 
@@ -37,7 +43,7 @@
               <textarea
                 name="task"
                 id="task"
-                class="size"
+                class="textarea-style"
                 cdkTextareaAutosize
                 #autosize="cdkTextareaAutosize"
                 cdkAutosizeMinRows="3"
@@ -46,12 +52,17 @@
                 #newTask
               ></textarea>
             </div>
-            <div class="spacer">
+            <div class="spacer-mod">
               <fa-icon
+                class="spacer"
                 [icon]="faCheck"
                 (click)="saveTask(newTask.value, column._id)"
               ></fa-icon>
-              <fa-icon [icon]="faTimes" (click)="cancelAdd()"></fa-icon>
+              <fa-icon
+                [icon]="faTimes"
+                (click)="cancelAdd()"
+                class="spacer"
+              ></fa-icon>
             </div>
           </div>
         </div>
@@ -77,8 +88,11 @@
               <textarea
                 name="task"
                 id="task"
-                cols="30"
-                rows="2"
+                class="textarea-style"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="5"
                 *ngIf="editTaskName && currentEditTaskId === item._id"
                 #editing
                 (change)="changeName = $event.target.value"
@@ -98,18 +112,18 @@
                   *ngIf="!editTaskName"
                 ></fa-icon>
                 <fa-icon
-                  class=""
                   [icon]="faCheck"
                   (click)="editTask(item, changeName)"
                   *ngIf="editTaskName && currentEditTaskId === item._id"
                 ></fa-icon>
                 <fa-icon
-                  class=""
+                  class="spacer"
                   [icon]="faTimes"
                   (click)="cancelTask()"
                   *ngIf="editTaskName && currentEditTaskId === item._id"
                 ></fa-icon>
                 <fa-icon
+                  class="spacer"
                   [icon]="faDumpster"
                   (click)="deleteTask(item)"
                   *ngIf="!editTaskName"

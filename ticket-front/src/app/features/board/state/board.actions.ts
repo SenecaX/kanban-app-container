@@ -65,12 +65,14 @@ export class AddColumnFail implements Action {
 
 export class DeleteColumn implements Action {
   readonly type = BoardActionTypes.DeleteColumn;
+
+  constructor(public payload: string) {}
 }
 
 export class DeleteColumnSuccess implements Action {
   readonly type = BoardActionTypes.DeleteColumnSuccess;
 
-  constructor(public payload: Column) {}
+  constructor(public payload: string) {}
 }
 
 export class DeleteColumnFail implements Action {

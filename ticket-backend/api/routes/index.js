@@ -17,4 +17,6 @@ router.route("/column").post(columnController.columnCreate);
 
 router.route("/column/:userId").get(columnController.columnListByUserId);
 
+router.route("/column/:columnId").delete(columnController.columnDeleteOne);
+
 module.exports = router;

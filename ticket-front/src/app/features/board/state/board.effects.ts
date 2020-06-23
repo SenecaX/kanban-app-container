@@ -13,10 +13,11 @@ import { ColumnService } from 'src/app/shared/services/column.api.service';
 @Injectable()
 export class BoardEffects {
   public decodedToken: any;
+
   constructor(
-    private actions$: Actions,
-    private taskService: TaskService,
-    private columnService: ColumnService
+    private readonly actions$: Actions,
+    private readonly taskService: TaskService,
+    private readonly columnService: ColumnService
   ) {
     const helper = new JwtHelperService();
     const getToken = localStorage.getItem('access_token');
@@ -27,9 +28,11 @@ export class BoardEffects {
   loadTasks$ = this.actions$.pipe(
     ofType(boardActions.BoardActionTypes.LoadTasks),
     mergeMap((action: boardActions.LoadTasks) =>
-      this.taskService
-        .getTasks(this.decodedToken._id)
-        .pipe(map((tasks: Task[]) => new boardActions.LoadTasksSuccess(tasks)))
+      this.taskService.getTasks(this.decodedToken._id).pipe(
+        map((tasks: Task[]) => {
+          return new boardActions.LoadTasksSuccess(tasks);
+        })
+      )
     )
   );
 
@@ -41,10 +44,7 @@ export class BoardEffects {
     }),
     mergeMap((task: Task) =>
       this.taskService.updateTask(task).pipe(
-        map(updatedTask => {
-          console.log('up', updatedTask);
-          return new boardActions.UpdateTaskSuccess(updatedTask);
-        }),
+        map(updatedTask => new boardActions.UpdateTaskSuccess(updatedTask)),
         catchError(err => of(new boardActions.UpdateTaskFail(err)))
       )
     )
@@ -89,14 +89,27 @@ export class BoardEffects {
   @Effect()
   loadColumns$ = this.actions$.pipe(
     ofType(boardActions.BoardActionTypes.LoadColumns),
-    mergeMap((action: boardActions.LoadColumns) =>
-      this.columnService
+    mergeMap((action: boardActions.LoadColumns) => {
+      console.log('load');
+      return this.columnService
         .getColumns(this.decodedToken._id)
         .pipe(
           map(
             (columns: Column[]) => new boardActions.LoadColumnsSuccess(columns)
           )
-        )
-    )
+        );
+    })
+  );
+
+  @Effect()
+  deleteColumn$: Observable<Action> = this.actions$.pipe(
+    ofType(boardActions.BoardActionTypes.DeleteColumn),
+    map((action: boardActions.DeleteColumn) => action.payload),
+    mergeMap((columnId: string) => {
+      return this.columnService.deleteColumn(columnId).pipe(
+        map(() => new boardActions.DeleteColumnSuccess(columnId)),
+        catchError(err => of(new boardActions.DeleteColumnFail(err)))
+      );
+    })
   );
 }

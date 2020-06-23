@@ -5,11 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {
-  TicketHttpInterceptor,
-  JwtInterceptor,
-  ErrorInterceptor
-} from './shared/interceptor';
+import { TicketHttpInterceptor, ErrorInterceptor } from './shared/interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import {
   CommonModule,
@@ -21,11 +17,10 @@ import { SharedModule } from './shared/shared.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { BoardEffects } from './features/board/state/board.effects';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material/material.module';
-import { AuthInterceptor } from './shared/interceptor/auth.interceptor';
+import { clearState } from './state/clearstate.reducer';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -47,7 +42,7 @@ export function tokenGetter() {
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({}, { metaReducers: [clearState] }),
     StoreDevtoolsModule.instrument({
       name: 'Board',
       maxAge: 25,
@@ -59,14 +54,8 @@ export function tokenGetter() {
   ],
   exports: [MaterialModule],
   providers: [
-    TicketHttpInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: LocationStrategy, useClass: HashLocationStrategy },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]
 })

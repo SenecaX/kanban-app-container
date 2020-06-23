@@ -65,30 +65,6 @@ export class TicketHttpInterceptor implements HttpInterceptor {
       return ok(users);
     }
 
-    function deleteUser() {
-      if (!isLoggedIn()) {
-        return unauthorized();
-      }
-
-      users = users.filter(x => x.id !== idFromUrl());
-      localStorage.setItem('users', JSON.stringify(users));
-      return ok();
-    }
-
-    function register() {
-      const user = body;
-
-      if (users.find(x => x.name === user.name)) {
-        return error('Username "' + user.name + '" is already taken');
-      }
-
-      user.id = users.length ? Math.max(...users.map(x => x.id)) + 1 : 1;
-      users.push(user);
-      localStorage.setItem('users', JSON.stringify(users));
-
-      return ok();
-    }
-
     // helper functions
 
     function ok(body?) {
@@ -105,11 +81,6 @@ export class TicketHttpInterceptor implements HttpInterceptor {
 
     function isLoggedIn() {
       return headers.get('Authorization') === 'Bearer fake-jwt-token';
-    }
-
-    function idFromUrl() {
-      const urlParts = url.split('/');
-      return parseInt(urlParts[urlParts.length - 1]);
     }
   }
 }
